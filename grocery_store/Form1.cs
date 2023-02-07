@@ -15,28 +15,7 @@ namespace grocery_store
     public partial class Form1 : Form
     {
         DBWrapper db;
-
         /////////////////////////////////////////////////////////////////
-
-        private void fillDataGrid(DataGridView dg, DataTable dt)
-        {
-            dg.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dg.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dg.Dock = DockStyle.Fill;
-            dg.ReadOnly = true;
-            dg.AllowUserToAddRows = false;
-            dg.AllowUserToDeleteRows = false;
-            dg.AllowUserToResizeColumns = false;
-            dg.MultiSelect= false;
-            dg.DataSource = dt;
-        }
-
-        private void fillComboBox(System.Windows.Forms.ComboBox cb, DataTable dt)
-        {
-            cb.Items.Clear();
-            for (int i=1, ie=dt.Columns.Count-1; i < ie; ++i) cb.Items.Add(dt.Columns[i].ColumnName);
-            cb.SelectedIndex = 0;
-        }
 
         public Form1()
         {
@@ -54,14 +33,13 @@ namespace grocery_store
 
             dataGridView1.DataSource = null;
             dataGridView2.DataSource = null;
-            DataTable dt_product_types = db.selectProductTypes();
 
-            fillDataGrid(dataGridView1, dt_product_types);
+            SecondaryMethods.fillDataGrid(dataGridView1, db.selectProductTypes());
 
             int index = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
             DataTable dt_product = db.selectProducts(index);
-            fillDataGrid(dataGridView2, dt_product);
-            fillComboBox(comboBox1, dt_product);
+            SecondaryMethods.fillDataGrid(dataGridView2, dt_product);
+            SecondaryMethods.fillComboBox(comboBox1, dt_product);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -75,7 +53,7 @@ namespace grocery_store
             if (e.KeyCode != Keys.Up && e.KeyCode != Keys.Down && e.KeyCode != Keys.Enter) return;
 
             int index = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
-            fillDataGrid(dataGridView2, db.selectProducts(index));
+            SecondaryMethods.fillDataGrid(dataGridView2, db.selectProducts(index));
         }
 
         private void dataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -86,7 +64,7 @@ namespace grocery_store
         private void dataGridView1_Sorted(object sender, EventArgs e)
         {
             int index = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
-            fillDataGrid(dataGridView2, db.selectProducts(index));
+            SecondaryMethods.fillDataGrid(dataGridView2, db.selectProducts(index));
         }
 
         private void dataGridView2_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -99,7 +77,7 @@ namespace grocery_store
             if (e.RowIndex < 0) return;
             dataGridView1.Rows[e.RowIndex].Selected = true;
             int index = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
-            fillDataGrid(dataGridView2, db.selectProducts(index));
+            SecondaryMethods.fillDataGrid(dataGridView2, db.selectProducts(index));
         }
 
         private void dataGridView1_DoubleClick(object sender, EventArgs e)
@@ -107,6 +85,25 @@ namespace grocery_store
             int index = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Form2 addForm = new Form2();
+            addForm.Owner = this;
+            addForm.ShowDialog();
+            if (is_update_product_types)
+            {
+                is_update_product_types = false;
+                SecondaryMethods.fillDataGrid(dataGridView1, db.selectProductTypes());
+            }
+            if (is_update_products)
+            {
+                is_update_products = false;
+                SecondaryMethods.fillDataGrid(dataGridView2, db.selectProductTypes());
+                int index = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
+                DataTable dt_product = db.selectProducts(index);
+                SecondaryMethods.fillDataGrid(dataGridView2, dt_product);
+            }
+        }
     }
 
 

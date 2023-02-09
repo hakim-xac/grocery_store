@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -27,15 +28,20 @@ namespace grocery_store
         {
             cb.Items.Clear();
             for (int i = 1, ie = dt.Columns.Count - 1; i < ie; ++i) cb.Items.Add(dt.Columns[i].ColumnName);
-            cb.SelectedIndex = 0;
+            if (cb.Items.Count > 0 ) cb.SelectedIndex = 0;
         }
-        
-        public static void onlyDataGridHeader(DataTable dt)
+        public static void fillComboBox(System.Windows.Forms.ComboBox cb, Hashtable ht)
         {
-            if (dt.Rows.Count == 0) return;
-            DataRow dr = dt.Rows[0];
-            dt.Clear();
-            dt.Rows.Add(dr);
+            cb.Items.Clear();
+            foreach (DictionaryEntry elem in ht) cb.Items.Add(elem.Key);
+
+            if (cb.Items.Count > 0) cb.SelectedIndex = 0;
+        }
+
+        public static bool fillHashTableFromBD(Hashtable ht, DataTable dt)
+        {
+            foreach (DataRow row in dt.Rows) ht.Add(row[0].ToString(), row[1].ToString());
+            return ht.Count == dt.Rows.Count;
         }
     }
 }

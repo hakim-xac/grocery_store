@@ -28,6 +28,16 @@ namespace grocery_store
         {
             return selectQuery("select * from product_types");
         }
+        public DataTable selectIdFromProductTypes(string field_departament_name)
+        {
+            return selectQuery("select id from product_types where \"Наименование отдела\"=\""+ field_departament_name+"\"");
+        }
+        public DataTable selectFieldProductTypes(string field)
+        {
+            return selectQuery("select "+field+" from product_types");
+        }
+
+
         public DataTable selectProducts(int index)
         {
             return selectQuery("select * from products where id_product_type = " + index);
@@ -37,7 +47,26 @@ namespace grocery_store
         {
             SQLiteCommand cmd = db.CreateCommand();
             string query = "insert into product_types('Наименование отдела', 'Номер ряда хранения', 'Номер секции хранения')" +
-                " values('"+ name +"', '"+ row +"', '"+ col +"')";
+                " values('" + name + "', '" + row + "', '" + col + "')";
+            cmd.CommandText = query;
+            return cmd.ExecuteNonQuery() > 0;
+        }
+
+        public bool WriteToProducts(string name, string provider, string unit
+            , float buy_price, float selling_price
+            , int coming_product, int remainder_product, int departament_id)
+        {
+            SQLiteCommand cmd = db.CreateCommand();
+
+            string query = "insert into products(" +
+                "'Название продукта', 'Поставщик', 'Единица измерения', " +
+                "'Цена покупки', 'Цена продажи', " +
+                "'Поступление товара', 'Остаток товара', 'id_product_type'" +
+                ")" +
+                " values('" + name + "', '" + provider + "', '" + unit + "'" +
+                ", '" + buy_price + "', '" + selling_price + "'" +
+                ", '" + coming_product + "', '" + remainder_product + "', '" + departament_id + "')";
+
             cmd.CommandText = query;
             return cmd.ExecuteNonQuery() > 0;
         }

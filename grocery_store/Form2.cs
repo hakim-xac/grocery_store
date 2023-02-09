@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
+
+
 namespace grocery_store
 {
     public partial class Form2 : Form
@@ -24,15 +26,19 @@ namespace grocery_store
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(textBox1.Text == String.Empty || textBox2.Text == String.Empty || textBox3.Text == String.Empty) {
+            if(textBox1.Text == String.Empty 
+                || textBox2.Text == String.Empty 
+                || textBox3.Text == String.Empty) {
                 MessageBox.Show("Все поля должн быть заполнены!");
                 return;
             }
 
             string name = textBox1.Text;
             name.Replace("\"", "\"\"");
+
             int row = int.Parse(textBox2.Text);
             int col = int.Parse(textBox3.Text);
+
             string query = "select id from product_types where \"Наименование отдела\" = \""+name
                 +"\" or \"Номер ряда хранения\"="+row
                 +" and \"Номер секции хранения\"="+col;

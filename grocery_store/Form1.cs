@@ -87,19 +87,26 @@ namespace grocery_store
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Form2 addForm = new Form2();
-            addForm.Owner = this;
-            addForm.ShowDialog();
+            Form2 new_form = new Form2();
+            new_form.Owner = this;
+            new_form.ShowDialog();
             if (is_update_product_types)
             {
                 is_update_product_types = false;
                 SecondaryMethods.fillDataGrid(dataGridView1, db.selectProductTypes());
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form3 new_form = new Form3();
+            new_form.Owner = this;
+            new_form.ShowDialog();
             if (is_update_products)
             {
                 is_update_products = false;
-                SecondaryMethods.fillDataGrid(dataGridView2, db.selectProductTypes());
                 int index = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
+
                 DataTable dt_product = db.selectProducts(index);
                 SecondaryMethods.fillDataGrid(dataGridView2, dt_product);
             }

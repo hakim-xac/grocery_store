@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace grocery_store
 {
@@ -45,19 +46,16 @@ namespace grocery_store
 
         public bool WriteToProductTypes(string name, int row, int col)
         {
-            SQLiteCommand cmd = db.CreateCommand();
-            string query = "insert into product_types('Наименование отдела', 'Номер ряда хранения', 'Номер секции хранения')" +
+            string query = "insert into " +
+                "product_types('Наименование отдела', 'Номер ряда хранения', 'Номер секции хранения')" +
                 " values('" + name + "', '" + row + "', '" + col + "')";
-            cmd.CommandText = query;
-            return cmd.ExecuteNonQuery() > 0;
+            return executeNonQuery(query);
         }
 
         public bool WriteToProducts(string name, string provider, string unit
             , float buy_price, float selling_price
             , int coming_product, int remainder_product, int departament_id)
         {
-            SQLiteCommand cmd = db.CreateCommand();
-
             string query = "insert into products(" +
                 "'Название продукта', 'Поставщик', 'Единица измерения', " +
                 "'Цена покупки', 'Цена продажи', " +
@@ -66,9 +64,7 @@ namespace grocery_store
                 " values('" + name + "', '" + provider + "', '" + unit + "'" +
                 ", '" + buy_price + "', '" + selling_price + "'" +
                 ", '" + coming_product + "', '" + remainder_product + "', '" + departament_id + "')";
-
-            cmd.CommandText = query;
-            return cmd.ExecuteNonQuery() > 0;
+            return executeNonQuery(query);
         }
 
         public bool isNoteExists(string query)
@@ -76,9 +72,18 @@ namespace grocery_store
             return selectQuery(query).Rows.Count > 0;
         }
 
+        public bool deleteProductType(int id)
+        {
+            return executeNonQuery("delete from product_types where id = "+id)
+                && executeNonQuery("delete from products where id_product_type=" + id);
+        }
 
-
-
+        private bool executeNonQuery(string query)
+        {
+            SQLiteCommand cmd = db.CreateCommand();
+            cmd.CommandText = query;
+            return cmd.ExecuteNonQuery() > 0;
+        }
 
         private DataTable selectQuery(string query)
         {

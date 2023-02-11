@@ -111,6 +111,48 @@ namespace grocery_store
                 SecondaryMethods.fillDataGrid(dataGridView2, dt_product);
             }
         }
+
+        private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            ContextMenuStrip my_menu = new System.Windows.Forms.ContextMenuStrip();
+            int index = dataGridView1.HitTest(e.X, e.Y).RowIndex;
+            if (index >= 0)
+            {
+                my_menu.Items.Add("Удалить:\r\nотдел: \"" + dataGridView1[1, index].Value+"\"\r\nid: "+ dataGridView1[0, index].Value);
+                my_menu.Items.Add("Добавить новый отдел");
+                my_menu.Items.Add("Добавить товар");
+                my_menu.Show(dataGridView1, new Point(e.X, e.Y));
+                my_menu.ItemClicked += new ToolStripItemClickedEventHandler(my_menu_Item_Clicked);
+            }
+        }
+
+        void my_menu_Item_Clicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            string str = e.ClickedItem.Text;
+            if (str.StartsWith("Удалить"))
+            {
+                string[] elems = str.Split(new char[] { '\n', '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (elems.Count() == 0) return;
+                string last = elems.Last<string>();
+                int index = int.TryParse(last, out _) ? int.Parse(last) : 0;
+                if (index == 0) return;
+                if(!db.deleteProductType(index))
+                {
+                    MessageBox.Show("Ошибка удаления отдела!\r\nПовторите запрос!");
+                    return;
+                }
+                SecondaryMethods.fillDataGrid(dataGridView1, db.selectProductTypes());
+            }
+            else if (str.StartsWith("Добавить новый"))
+            {
+                button1_Click(sender, e);
+            }
+            else if (str.StartsWith("Добавить товар"))
+            {
+                button2_Click(sender, e);
+            }
+        }
     }
 
 

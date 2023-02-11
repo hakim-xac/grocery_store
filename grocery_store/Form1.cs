@@ -115,19 +115,19 @@ namespace grocery_store
         private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Right) return;
-            ContextMenuStrip my_menu = new System.Windows.Forms.ContextMenuStrip();
+            ContextMenuStrip grid1_menu = new System.Windows.Forms.ContextMenuStrip();
             int index = dataGridView1.HitTest(e.X, e.Y).RowIndex;
             if (index >= 0)
             {
-                my_menu.Items.Add("Удалить:\r\nотдел: \"" + dataGridView1[1, index].Value+"\"\r\nid: "+ dataGridView1[0, index].Value);
-                my_menu.Items.Add("Добавить новый отдел");
-                my_menu.Items.Add("Добавить товар");
-                my_menu.Show(dataGridView1, new Point(e.X, e.Y));
-                my_menu.ItemClicked += new ToolStripItemClickedEventHandler(my_menu_Item_Clicked);
+                grid1_menu.Items.Add("Удалить:\r\nотдел: \"" + dataGridView1[1, index].Value+"\"\r\nid: "+ dataGridView1[0, index].Value);
+                grid1_menu.Items.Add("Добавить новый отдел");
+                grid1_menu.Items.Add("Добавить товар");
+                grid1_menu.Show(dataGridView1, new Point(e.X, e.Y));
+                grid1_menu.ItemClicked += new ToolStripItemClickedEventHandler(grid1_menu_Item_Clicked);
             }
         }
 
-        void my_menu_Item_Clicked(object sender, ToolStripItemClickedEventArgs e)
+        void grid1_menu_Item_Clicked(object sender, ToolStripItemClickedEventArgs e)
         {
             string str = e.ClickedItem.Text;
             if (str.StartsWith("Удалить"))
@@ -143,6 +143,8 @@ namespace grocery_store
                     return;
                 }
                 SecondaryMethods.fillDataGrid(dataGridView1, db.selectProductTypes());
+                int id_product_type = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
+                SecondaryMethods.fillDataGrid(dataGridView2, db.selectProducts(id_product_type));
             }
             else if (str.StartsWith("Добавить новый"))
             {
@@ -152,6 +154,71 @@ namespace grocery_store
             {
                 button2_Click(sender, e);
             }
+        }
+
+        private void dataGridView2_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            ContextMenuStrip grid2_menu = new System.Windows.Forms.ContextMenuStrip();
+            int index = dataGridView2.HitTest(e.X, e.Y).RowIndex;
+            if (index >= 0)
+            {
+                grid2_menu.Items.Add("Удалить:\r\nотдел: \"" + dataGridView2[1, index].Value + "\"\r\nid: " + dataGridView2[0, index].Value);
+                grid2_menu.Show(dataGridView2, new Point(e.X, e.Y));
+                grid2_menu.ItemClicked += new ToolStripItemClickedEventHandler(grid2_menu_Item_Clicked);
+            }
+        }
+
+        void grid2_menu_Item_Clicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            string str = e.ClickedItem.Text;
+            if (str.StartsWith("Удалить"))
+            {
+                string[] elems = str.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (elems.Count() == 0) return;
+                string last = elems.Last<string>();
+                int index = int.TryParse(last, out _) ? int.Parse(last) : 0;
+                if (index == 0) return;
+
+                if (!db.deleteProduct(index))
+                {
+                    MessageBox.Show("Ошибка удаления продукта!\r\nПовторите запрос!");
+                    return;
+                }
+                int id_product_type = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
+                SecondaryMethods.fillDataGrid(dataGridView2, db.selectProducts(id_product_type));
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if(textBox1.Text == String.Empty && textBox2.Text == String.Empty) return;
+
+            DataTable dt_find = null;
+            string field_name_find = comboBox1.Items[comboBox1.SelectedIndex].ToString();
+
+            if (textBox2.Text != String.Empty)
+            {
+                string str_find = textBox2.Text.Replace("\"", "\\\"");
+                int id_product_type = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
+                dt_find = db.selectProductsEquals(id_product_type, field_name_find, str_find);
+            }
+            if((dt_find != null && dt_find.Rows.Count == 0) && textBox1.Text != String.Empty 
+                || dt_find == null && textBox1.Text != String.Empty)
+            {
+                string str_find = textBox1.Text.Replace("\"", "\\\"");
+                int id_product_type = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
+                dt_find = db.selectProductsContains(id_product_type, field_name_find, str_find);
+            }
+            SecondaryMethods.fillDataGrid(dataGridView2, dt_find);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+            textBox2.Clear();
+            int id_product_type = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
+            SecondaryMethods.fillDataGrid(dataGridView2, db.selectProducts(id_product_type));
         }
     }
 

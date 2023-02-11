@@ -47,6 +47,7 @@
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.panel2 = new System.Windows.Forms.Panel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.button4 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -69,7 +70,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(834, 571);
+            this.panel1.Size = new System.Drawing.Size(834, 599);
             this.panel1.TabIndex = 0;
             // 
             // panel5
@@ -79,18 +80,19 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel5.Location = new System.Drawing.Point(0, 468);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(834, 100);
+            this.panel5.Size = new System.Drawing.Size(834, 128);
             this.panel5.TabIndex = 4;
             // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.button4);
             this.panel6.Controls.Add(this.groupBox2);
             this.panel6.Controls.Add(this.groupBox1);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 0);
             this.panel6.Name = "panel6";
             this.panel6.Padding = new System.Windows.Forms.Padding(5);
-            this.panel6.Size = new System.Drawing.Size(594, 100);
+            this.panel6.Size = new System.Drawing.Size(594, 128);
             this.panel6.TabIndex = 8;
             // 
             // groupBox2
@@ -143,19 +145,20 @@
             this.panel7.Location = new System.Drawing.Point(594, 0);
             this.panel7.Name = "panel7";
             this.panel7.Padding = new System.Windows.Forms.Padding(5, 20, 5, 10);
-            this.panel7.Size = new System.Drawing.Size(240, 100);
+            this.panel7.Size = new System.Drawing.Size(240, 128);
             this.panel7.TabIndex = 7;
             // 
             // button3
             // 
             this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button3.Location = new System.Drawing.Point(5, 55);
+            this.button3.Location = new System.Drawing.Point(5, 48);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(230, 35);
+            this.button3.Size = new System.Drawing.Size(230, 70);
             this.button3.TabIndex = 2;
             this.button3.Text = "Найти";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // comboBox1
             // 
@@ -222,6 +225,7 @@
             this.dataGridView2.Size = new System.Drawing.Size(834, 199);
             this.dataGridView2.TabIndex = 0;
             this.dataGridView2.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dataGridView2_RowPostPaint);
+            this.dataGridView2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView2_MouseClick);
             // 
             // panel2
             // 
@@ -248,11 +252,23 @@
             this.dataGridView1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyUp);
             this.dataGridView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseClick);
             // 
+            // button4
+            // 
+            this.button4.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button4.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button4.Location = new System.Drawing.Point(5, 88);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(584, 35);
+            this.button4.TabIndex = 4;
+            this.button4.Text = "Очистить поиск";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(834, 571);
+            this.ClientSize = new System.Drawing.Size(834, 599);
             this.Controls.Add(this.panel1);
             this.MinimumSize = new System.Drawing.Size(850, 610);
             this.Name = "Form1";
@@ -295,6 +311,7 @@
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
     }
 }
 

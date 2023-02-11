@@ -29,19 +29,32 @@ namespace grocery_store
         {
             return selectQuery("select * from product_types");
         }
+
         public DataTable selectIdFromProductTypes(string field_departament_name)
         {
             return selectQuery("select id from product_types where \"Наименование отдела\"=\""+ field_departament_name+"\"");
         }
+
         public DataTable selectFieldProductTypes(string field)
         {
             return selectQuery("select "+field+" from product_types");
         }
 
-
         public DataTable selectProducts(int index)
         {
             return selectQuery("select * from products where id_product_type = " + index);
+        }
+
+        public DataTable selectProductsContains(int index, string field_name, string string_find)
+        {
+            return selectQuery("select * from products where id_product_type="+index+" and " +
+                "\""+field_name + "\" like \"%"+string_find+"%\"");
+        }
+
+        public DataTable selectProductsEquals(int index, string field_name, string string_find)
+        {
+            return selectQuery("select * from products where id_product_type=" + index + " and " +
+                "\"" + field_name + "\"=\"" + string_find + "\"");
         }
 
         public bool WriteToProductTypes(string name, int row, int col)
@@ -74,8 +87,12 @@ namespace grocery_store
 
         public bool deleteProductType(int id)
         {
-            return executeNonQuery("delete from product_types where id = "+id)
-                && executeNonQuery("delete from products where id_product_type=" + id);
+            executeNonQuery("delete from products where id_product_type=" + id);
+            return executeNonQuery("delete from product_types where id = " + id);
+        }
+        public bool deleteProduct(int id)
+        {
+            return executeNonQuery("delete from products where id=" + id);
         }
 
         private bool executeNonQuery(string query)

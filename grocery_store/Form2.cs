@@ -44,7 +44,8 @@ namespace grocery_store
             }
 
             string name = textBox1.Text;
-            name.Replace("\"", "\"\"");
+            name.Replace("\"", "");
+            name.Replace("\'", "");
 
             int row = int.Parse(textBox2.Text);
             int col = int.Parse(textBox3.Text);

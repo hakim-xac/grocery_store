@@ -37,6 +37,11 @@ namespace grocery_store
             return selectQuery("select id from product_types where \"Наименование отдела\"=\""+ field_departament_name+"\"");
         }
 
+        public DataTable selectFieldProducts(string field, string value)
+        {
+            return selectQuery("select * from products where \""+field+"\"=\""+value+"\"");
+        }
+
         public DataTable selectFieldProductTypes(string field, string value)
         {
             return selectQuery("select * from product_types where \""+field+"\"=\""+value+"\"");
@@ -77,6 +82,26 @@ namespace grocery_store
             return executeNonQuery(query);
         }
 
+        public bool updateProduct(string name, string provider, string unit
+            , float buy_price, float selling_price
+            , int coming_product, int remainder_product, int departament_id, int id_product
+            , bool updated)
+        {
+            if(updated) if (isExistsProduct(name, departament_id)) return false;
+
+            string query = "update products set \"Название продукта\" = \"" + name
+                + "\", \"Поставщик\"=\"" + provider+"\""
+                + " , \"Единица измерения\"=\"" + unit
+                + "\", \"Цена покупки\"=\"" + buy_price
+                + "\", \"Цена продажи\"=\"" + selling_price
+                + "\", \"Поступление товара\"=\"" + coming_product
+                + "\", \"Остаток товара\"=\"" + remainder_product
+                + "\", \"id_product_type\"=\"" + departament_id + "\""
+                + " where id =\"" + id_product + "\"";
+
+            return executeNonQuery(query);
+        }
+
         public bool WriteToProducts(string name, string provider, string unit
             , float buy_price, float selling_price
             , int coming_product, int remainder_product, int departament_id)
@@ -100,14 +125,15 @@ namespace grocery_store
                 + " limit 1";
             return selectQuery(query).Rows.Count > 0;
         }
-        public bool isExistsProduct(string name, string provider, float buy_price, float selling_price, int departament_id)
+        public bool isExistsProduct(string name, int departament_id)
         {
-            string query = "select id from products where \"Название продукта\" = \"" + name
-                + "\" and \"Поставщик\"=" + provider
-                + " and \"Цена покупки\"=" + buy_price
-                + " and \"Цена продажи\"=" + selling_price
-                + " and \"id_product_type\"=" + departament_id
-                ;
+            string query = "select id from products where \"Название продукта\" = \"" + name+"\""
+                + " and \"id_product_type\"=\"" + departament_id+"\"";
+            return selectQuery(query).Rows.Count > 0;
+        }
+        public bool isExistsProduct(int id_product)
+        {
+            string query = "select id from products where \"id\"=" + id_product;
             return selectQuery(query).Rows.Count > 0;
         }
 

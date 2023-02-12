@@ -373,8 +373,10 @@
             this.MinimumSize = new System.Drawing.Size(460, 500);
             this.Name = "Form3";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Form3";
+            this.Text = "Данные таблицы Products";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form3_FormClosing);
             this.Load += new System.EventHandler(this.Form3_Load);
+            this.Shown += new System.EventHandler(this.Form3_Shown);
             this.panel1.ResumeLayout(false);
             this.panel10.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);

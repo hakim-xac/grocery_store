@@ -6,6 +6,7 @@
         public bool is_update_products = false;
         public int id_product_types = 0;
         public int id_products = 0;
+        public string name_product_type = "";
         /// <summary>
         /// Обязательная переменная конструктора.
         /// </summary>

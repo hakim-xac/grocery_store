@@ -43,5 +43,10 @@ namespace grocery_store
             foreach (DataRow row in dt.Rows) ht.Add(row[0].ToString(), row[1].ToString());
             return ht.Count == dt.Rows.Count;
         }
+
+        public static string noSQLInjection(string str)
+        {
+            return str.Replace("\"", "").Replace("\'", "").Replace(";", "").Replace("%", "");
+        }
     }
 }

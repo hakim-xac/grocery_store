@@ -110,6 +110,8 @@ namespace grocery_store
 
         private void button2_Click(object sender, EventArgs e)
         {
+            name_product_type = dataGridView1[1, dataGridView1.CurrentRow.Index].Value.ToString();
+
             Form3 new_form = new Form3();
             new_form.Owner = this;
             new_form.ShowDialog();
@@ -181,6 +183,7 @@ namespace grocery_store
             if (index >= 0)
             {
                 grid2_menu.Items.Add("Удалить:\r\nотдел: \"" + dataGridView2[1, index].Value + "\"\r\nid: " + dataGridView2[0, index].Value);
+                grid2_menu.Items.Add("Изменить:\r\nотдел: \"" + dataGridView2[1, index].Value + "\"\r\nid: " + dataGridView2[0, index].Value);
                 grid2_menu.Show(dataGridView2, new Point(e.X, e.Y));
                 grid2_menu.ItemClicked += new ToolStripItemClickedEventHandler(grid2_menu_Item_Clicked);
             }
@@ -191,12 +194,8 @@ namespace grocery_store
             string str = e.ClickedItem.Text;
             if (str.StartsWith("Удалить"))
             {
-                string[] elems = str.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (elems.Count() == 0) return;
-                string last = elems.Last<string>();
-                int index = int.TryParse(last, out _) ? int.Parse(last) : 0;
-                if (index == 0) return;
-
+                int index = parseFromPopup(str);
+                
                 if (!db.deleteProduct(index))
                 {
                     MessageBox.Show("Ошибка удаления продукта!\r\nПовторите запрос!");
@@ -204,6 +203,12 @@ namespace grocery_store
                 }
                 int id_product_type = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
                 SecondaryMethods.fillDataGrid(dataGridView2, db.selectProducts(id_product_type));
+            }
+            else if (str.StartsWith("Изменить"))
+            {
+                name_product_type = dataGridView1[1, dataGridView1.CurrentRow.Index].Value.ToString();
+                id_products = parseFromPopup(str);
+                button2_Click(sender, e);
             }
         }
 
@@ -240,8 +245,9 @@ namespace grocery_store
 
         private void dataGridView2_DoubleClick(object sender, EventArgs e)
         {
-            int index = int.Parse(dataGridView2[0, dataGridView2.CurrentRow.Index].Value.ToString());
-            MessageBox.Show(index.ToString());
+            name_product_type = dataGridView1[1, dataGridView1.CurrentRow.Index].Value.ToString();
+            id_products = int.Parse(dataGridView2[0, dataGridView2.CurrentRow.Index].Value.ToString());
+            button2_Click(sender, e);
         }
     }
 

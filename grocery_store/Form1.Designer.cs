@@ -4,6 +4,8 @@
     {
         public bool is_update_product_types = false;
         public bool is_update_products = false;
+        public int id_product_types = 0;
+        public int id_products = 0;
         /// <summary>
         /// Обязательная переменная конструктора.
         /// </summary>
@@ -33,6 +35,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.button4 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -47,7 +50,6 @@
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.panel2 = new System.Windows.Forms.Panel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.button4 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -94,6 +96,18 @@
             this.panel6.Padding = new System.Windows.Forms.Padding(5);
             this.panel6.Size = new System.Drawing.Size(594, 128);
             this.panel6.TabIndex = 8;
+            // 
+            // button4
+            // 
+            this.button4.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button4.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button4.Location = new System.Drawing.Point(5, 88);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(584, 35);
+            this.button4.TabIndex = 4;
+            this.button4.Text = "Очистить поиск";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // groupBox2
             // 
@@ -225,6 +239,7 @@
             this.dataGridView2.Size = new System.Drawing.Size(834, 199);
             this.dataGridView2.TabIndex = 0;
             this.dataGridView2.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dataGridView2_RowPostPaint);
+            this.dataGridView2.DoubleClick += new System.EventHandler(this.dataGridView2_DoubleClick);
             this.dataGridView2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView2_MouseClick);
             // 
             // panel2
@@ -251,18 +266,6 @@
             this.dataGridView1.DoubleClick += new System.EventHandler(this.dataGridView1_DoubleClick);
             this.dataGridView1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyUp);
             this.dataGridView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseClick);
-            // 
-            // button4
-            // 
-            this.button4.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button4.Location = new System.Drawing.Point(5, 88);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(584, 35);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "Очистить поиск";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // Form1
             // 

@@ -25,9 +25,11 @@ namespace grocery_store
             return selectQuery("select id from product_types limit 1").Rows.Count != 0;
         }
 
-        public DataTable selectProductTypes()
+        public DataTable selectProductTypes(string field="")
         {
-            return selectQuery("select * from product_types");
+            return field == String.Empty 
+                ? selectQuery("select * from product_types")
+                : selectQuery("select " + field + " from product_types");
         }
 
         public DataTable selectIdFromProductTypes(string field_departament_name)
@@ -35,9 +37,9 @@ namespace grocery_store
             return selectQuery("select id from product_types where \"Наименование отдела\"=\""+ field_departament_name+"\"");
         }
 
-        public DataTable selectFieldProductTypes(string field)
+        public DataTable selectFieldProductTypes(string field, string value)
         {
-            return selectQuery("select "+field+" from product_types");
+            return selectQuery("select * from product_types where \""+field+"\"=\""+value+"\"");
         }
 
         public DataTable selectProducts(int index)
@@ -65,6 +67,16 @@ namespace grocery_store
             return executeNonQuery(query);
         }
 
+        public bool updateProductTypes(string name, int row, int col, int id)
+        {
+            string query = "update product_types set \"Наименование отдела\" = \"" + name
+                + "\", \"Номер ряда хранения\"=" + row
+                + " , \"Номер секции хранения\"=" + col
+                + " where id =\"" + id + "\"";
+
+            return executeNonQuery(query);
+        }
+
         public bool WriteToProducts(string name, string provider, string unit
             , float buy_price, float selling_price
             , int coming_product, int remainder_product, int departament_id)
@@ -80,8 +92,22 @@ namespace grocery_store
             return executeNonQuery(query);
         }
 
-        public bool isNoteExists(string query)
+        public bool isExistsProductType(string name, int row, int col)
         {
+            string query = "select id from product_types where \"Наименование отдела\" = \"" + name
+                + "\" or \"Номер ряда хранения\"=" + row
+                + " and \"Номер секции хранения\"=" + col
+                + " limit 1";
+            return selectQuery(query).Rows.Count > 0;
+        }
+        public bool isExistsProduct(string name, string provider, float buy_price, float selling_price, int departament_id)
+        {
+            string query = "select id from products where \"Название продукта\" = \"" + name
+                + "\" and \"Поставщик\"=" + provider
+                + " and \"Цена покупки\"=" + buy_price
+                + " and \"Цена продажи\"=" + selling_price
+                + " and \"id_product_type\"=" + departament_id
+                ;
             return selectQuery(query).Rows.Count > 0;
         }
 

@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.SQLite;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace grocery_store
 {
@@ -16,6 +10,21 @@ namespace grocery_store
     {
         DBWrapper db;
         /////////////////////////////////////////////////////////////////
+
+        private void updateAllDataGrids()
+        {
+            SecondaryMethods.fillDataGrid(dataGridView1, db.selectProductTypes());
+            int id_product_type = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
+            SecondaryMethods.fillDataGrid(dataGridView2, db.selectProducts(id_product_type));
+        }
+
+        private int parseFromPopup(string str)
+        {
+            string[] elems = str.Split(new char[] { '\n', '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (elems.Count() == 0) return 0;
+            string last = elems.Last<string>();
+            return int.TryParse(last, out _) ? int.Parse(last) : 0;
+        }
 
         public Form1()
         {
@@ -38,6 +47,7 @@ namespace grocery_store
 
             int index = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
             DataTable dt_product = db.selectProducts(index);
+
             SecondaryMethods.fillDataGrid(dataGridView2, dt_product);
             SecondaryMethods.fillComboBox(comboBox1, dt_product);
         }
@@ -82,7 +92,8 @@ namespace grocery_store
 
         private void dataGridView1_DoubleClick(object sender, EventArgs e)
         {
-            int index = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
+            id_product_types = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
+            button1_Click(sender, e);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -120,6 +131,7 @@ namespace grocery_store
             if (index >= 0)
             {
                 grid1_menu.Items.Add("Удалить:\r\nотдел: \"" + dataGridView1[1, index].Value+"\"\r\nid: "+ dataGridView1[0, index].Value);
+                grid1_menu.Items.Add("Изменить:\r\nотдел: \"" + dataGridView1[1, index].Value+"\"\r\nid: "+ dataGridView1[0, index].Value);
                 grid1_menu.Items.Add("Добавить новый отдел");
                 grid1_menu.Items.Add("Добавить товар");
                 grid1_menu.Show(dataGridView1, new Point(e.X, e.Y));
@@ -132,19 +144,24 @@ namespace grocery_store
             string str = e.ClickedItem.Text;
             if (str.StartsWith("Удалить"))
             {
-                string[] elems = str.Split(new char[] { '\n', '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (elems.Count() == 0) return;
-                string last = elems.Last<string>();
-                int index = int.TryParse(last, out _) ? int.Parse(last) : 0;
+                int index = parseFromPopup(str);
+
                 if (index == 0) return;
+
                 if(!db.deleteProductType(index))
                 {
                     MessageBox.Show("Ошибка удаления отдела!\r\nПовторите запрос!");
                     return;
                 }
-                SecondaryMethods.fillDataGrid(dataGridView1, db.selectProductTypes());
-                int id_product_type = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
-                SecondaryMethods.fillDataGrid(dataGridView2, db.selectProducts(id_product_type));
+                updateAllDataGrids();
+            }
+            else if (str.StartsWith("Изменить"))
+            {
+                id_product_types = parseFromPopup(str);
+                if (id_product_types == 0) return;
+
+                button1_Click(sender, e);
+
             }
             else if (str.StartsWith("Добавить новый"))
             {
@@ -219,6 +236,12 @@ namespace grocery_store
             textBox2.Clear();
             int id_product_type = int.Parse(dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString());
             SecondaryMethods.fillDataGrid(dataGridView2, db.selectProducts(id_product_type));
+        }
+
+        private void dataGridView2_DoubleClick(object sender, EventArgs e)
+        {
+            int index = int.Parse(dataGridView2[0, dataGridView2.CurrentRow.Index].Value.ToString());
+            MessageBox.Show(index.ToString());
         }
     }
 

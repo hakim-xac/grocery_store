@@ -26,7 +26,7 @@ namespace grocery_store
         {
             db = new DBWrapper();
             if (!db.isOpen() 
-                || !SecondaryMethods.fillHashTableFromBD(ht, db.selectFieldProductTypes("\"Наименование отдела\", \"id\"")))
+                || !SecondaryMethods.fillHashTableFromBD(ht, db.selectProductTypes("\"Наименование отдела\", \"id\"")))
             {
                 MessageBox.Show("Ошибка загрузки базы данных!");
                 Application.Exit();
@@ -71,15 +71,7 @@ namespace grocery_store
             provider.Replace("\"", "\"\"");
             unit.Replace("\"", "\"\"");
 
-
-            string query = "select id from products where \"Название продукта\" = \"" + name_product
-                + "\" and \"Поставщик\"=" + provider
-                + " and \"Цена покупки\"=" + buy_price
-                + " and \"Цена продажи\"=" + selling_price
-                + " and \"id_product_type\"=" + departament_id
-                ;
-
-            if (db.isNoteExists(query))
+            if (db.isExistsProduct(name_product, provider, buy_price, selling_price, departament_id))
             {
                 MessageBox.Show("Данная запись уже присутствует!\r\n" +
                     "Измените её или создайте новую!\r\n" +
